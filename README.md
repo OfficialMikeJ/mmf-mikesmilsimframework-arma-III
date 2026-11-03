@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/OfficialMikeJ/mmf-mikesmilsimframework-arma-III)](https://github.com/OfficialMikeJ/mmf-mikesmilsimframework-arma-III/issues)
 
-**MMF (Mike's Milsim Framework)** is a fully customizable, server-authoritative procedural milsim mission generation and campaign system for **Arma III**. Built entirely in native SQF, MMF dynamically generates endless tactical operations, coordinates opposing force defenses, places concealed roadside IED hazards, assigns real-world military lore callsigns, and tracks campaign progress across server restarts without repeating recently played sectors.
+**MMF (Mike's Milsim Framework)** is a fully customizable, server-authoritative procedural milsim mission generation and campaign system for **Arma III**. Built entirely in native SQF, MMF dynamically generates endless tactical operations, coordinates opposing force defenses, places concealed roadside IED hazards, assigns real-world military lore callsigns, provides overhead recon drones, enforces strict mod-only armories, handles smoke-called helicopter extractions, and tracks campaign progress across server restarts without repeating recently played sectors.
 
 ---
 
@@ -22,6 +22,13 @@
 - [Key Features](#-key-features)
 - [Primary Mission Archetypes](#-primary-mission-archetypes)
 - [Supported Mods & Content Integration](#-supported-mods--content-integration)
+- [Tactical Inventory & Armory Systems](#-tactical-inventory--armory-systems)
+  - [Mandatory Mod-Only Gear Restriction](#mandatory-mod-only-gear-restriction)
+  - [ACE3 & Virtual Arsenal Crate Init](#ace3--virtual-arsenal-crate-init)
+  - [Predefined Role Loadouts & Dynamic Role Names](#predefined-role-loadouts--dynamic-role-names)
+- [Field Support Systems](#-field-support-systems)
+  - [Autonomous Overhead Recon Drone](#autonomous-overhead-recon-drone)
+  - [NPC Helicopter Exfil via Colored Smoke](#npc-helicopter-exfil-via-colored-smoke)
 - [Campaign & Gameplay Systems](#-campaign--gameplay-systems)
   - [Continuous Campaign Loop](#continuous-campaign-loop)
   - [Safe Zone & Exclusion System](#safe-zone--exclusion-system)
@@ -37,12 +44,14 @@
 ## 🌟 Key Features
 
 * **Server-Authoritative Continuous Operations:** Automatically generates follow-on operations upon main mission completion, immediately retasks the Task Force upon mission failure, and generates fresh scenarios on manual server restart.
-* **Modular SQF Configuration Architecture:** 6 dedicated configuration files with over 50 documented variables. Every system features independent boolean toggles (`true`/`false`) and numeric `0` disable logic.
-* **Multi-Faction & Custom Mod Support:** Category-aware validation against `CfgVehicles`, `CfgWeapons`, `CfgMagazines`, and `CfgAmmo`. Safely verifies modded content and skips missing mod classes without throwing script errors.
+* **Strict Mod-Only Gear Restriction Engine:** Hardcoded filter ensures that whenever community mods (RHS, CUP, 3CB, HLC, Tier1, SMA, ACE) are loaded, all vanilla, official DLC, and Creator DLC (CDLC) weapons, gear, uniforms, vests, helmets, and ammunition are purged from AI, player slots, and arsenals.
+* **ACE3 Arsenal Crate Initializer:** Drop `[this] call MF_fnc_initArsenal;` into any crate/ammobox init field in Eden Editor to populate a clean, mod-only armory.
+* **Predefined Tactical Role Loadouts:** Optional specialized loadouts (e.g. Light Machine Gunner carrying squad medical supplies, extra rifle magazines, extra rockets, and drum ammo) and dynamic role name overrides.
+* **Autonomous Overhead Recon Drone:** Deploy high-altitude recon UAV orbiting active operations at 750m AGL. Linked to UAV terminals for seamless manual pilot/gunner override, thermal recon, and missile strikes.
+* **NPC Helicopter Exfil via Purple Smoke:** Throwing designated smoke (default `SmokeShellPurple`) calls a dustoff helicopter. AI pilot accurately counts live squad operators in the LZ zone and **strictly holds on the deck until all operators are aboard** before returning to base.
+* **Modular SQF Configuration Architecture:** 8 dedicated configuration files with over 60 documented variables. Every system features independent boolean toggles (`true`/`false`) and numeric `0` disable logic.
 * **Deterministic Dual-LCG PRNG Seed Engine:** Choose between **Random Seed Mode** (unlimited fresh scenarios) or **Manual Seed Mode** (reproducible seed for training, debugging, or competitive scenarios).
 * **Cross-Restart Persistent Mission History:** Bounded history stored in server `profileNamespace` using multi-factor similarity scoring (AO distance, mission type, sub-objectives, faction, modifiers) to ensure recently played sectors are not repeated.
-* **Dynamic Briefings & Map Tracking Markers:** Live Military Operation Order (OPORD) entries in the player Map Diary with real-time HUD alerts and persistent map markers (`[IN PROGRESS]`, `[PASSED]`, `[FAILED]`, `[OPTIONAL SIDE]`).
-* **Zero Script Overhead on Disabled Features:** Disabled subsystems spawn zero entities, schedule zero background threads, and consume zero server CPU.
 
 ---
 
@@ -104,7 +113,8 @@ MMF features an intelligent **category-aware classname validation engine** (`MF_
 <details>
 <summary><b>4. ACE3 — Advanced Combat Environment</b> (Click to expand)</summary>
 
-* **EOD & Explosives Interaction Menu:** Native support for `ace_interact_menu`. Dismounted players can inspect and disarm roadside IEDs via ACE3 radial actions.
+* **ACE Arsenal:** Clean native armory whitelist populated strictly with loaded mod weapons and equipment.
+* **EOD & Explosives Interaction Menu:** Dismounted players can inspect and disarm roadside IEDs via ACE3 radial actions.
 * **Specialist Equipment Recognition:**
   * Detectors: `ACE_VMH3`, `ACE_VMM3`, vanilla `MineDetector`
   * EOD Tools: `ACE_DefusalKit`, vanilla `ToolKit`
@@ -118,6 +128,56 @@ MMF features an intelligent **category-aware classname validation engine** (`MF_
 * Compatible with 3CB British Armed Forces equipment and vehicles.
 * Supports 3CB Middle Eastern, Cold War, and Eastern European insurgent and governmental factions.
 </details>
+
+---
+
+## 🎒 Tactical Inventory & Armory Systems
+
+### Mandatory Mod-Only Gear Restriction
+To maintain milsim realism and clean arsenals, MMF includes a hardcoded restriction engine (`MF_fnc_filterModContent` & `MF_fnc_enforceModGear`):
+* **Purges Vanilla Gear:** When community mods are loaded, all vanilla, DLC, and CDLC weapons, gear, uniforms, vests, helmets, and ammunition are completely barred.
+* **AI Gear Replacement:** Enemy AI units spawned in patrols, garrisons, and fortifications are automatically stripped of vanilla weapons and equipped with modded armaments.
+* **Playable Slot Protection:** Newly added player or civilian slots are prevented from spawning with pre-made vanilla gear. An inventory event guard prevents players from taking vanilla weapons.
+* **Vehicles Unaffected:** Mission makers can still freely place vanilla or modded vehicles; restrictions apply exclusively to personal weapons, gear, and ammunition.
+* **Integrity Enforcement:** The restriction check is hardcoded into the framework core and will trigger a critical security abort if files are removed or modified. If **no** community mods are loaded, vanilla gear is cleanly permitted as a fallback.
+
+### ACE3 & Virtual Arsenal Crate Init
+Mission makers can turn any placed crate, ammobox, or vehicle into a modded armory with a single Eden Editor init line:
+
+```sqf
+[this] call MF_fnc_initArsenal;
+```
+
+* Clears default container clutter.
+* Automatically whitelists every detected community mod item in ACE Arsenal (or BIS Virtual Arsenal if ACE3 is absent).
+* Adds a direct scroll-wheel interaction to access the armory.
+
+### Predefined Role Loadouts & Dynamic Role Names
+Configured in `config\cfg_player_loadouts.sqf`:
+* **`MF_EnableCustomRoleLoadouts`** (Disabled by default): When set to `true`, automatically assigns custom kits based on player role.
+  * *Light Machine Gunner (LMG):* Carries squad medical supplies, extra magazines for riflemen, extra rockets for the AT specialist, and high-capacity drum/box ammunition.
+  * *Combat Medic:* Carries field dressings, elastic bandages, morphine, epinephrine, blood IVs, splints, and smoke grenades.
+  * *Anti-Tank (LAT):* Carries rocket launchers, AT warheads, and smoke grenades.
+  * *Designated Marksman (DMR):* Precision optics and rangefinder.
+* **`MF_EnableCustomRoleNames`** (Disabled by default): When set to `true`, dynamically overrides lobby/role selection screen names using the `MF_CustomRoleNameOverrides` array (e.g. "Autorifleman" displays as "Heavy Support Gunner (LMG)").
+
+---
+
+## 🚁 Field Support Systems
+
+Configured in `config\cfg_support_systems.sqf`:
+
+### Autonomous Overhead Recon Drone
+* **`MF_EnableReconDrone = true;`**: Automatically deploys a friendly high-altitude UAV (default: MQ-4A Greyhawk / `B_UAV_02_dynamicLoadout_F`) orbiting 750m AGL above the active Area of Operations.
+* **UAV Terminal Linking:** Any friendly player with a UAV Terminal can connect, take manual pilot or gunner control, steer, adjust altitude and airspeed, utilize FLIR/thermal optics, and fire precision missiles.
+* **Autonomous Orbit Retention:** When the operator releases control, the UAV immediately resumes its autonomous orbit.
+* **Campaign Re-Tasking:** Automatically re-tasks its loiter orbit when the campaign transitions to a new AO.
+
+### NPC Helicopter Exfil via Colored Smoke
+* **`MF_EnableExfilSupport = true;`**: Calling extraction is as simple as throwing a designated smoke grenade (default: `SmokeShellPurple`).
+* **Headcount Awareness:** When the smoke lands, the framework scans the extraction zone (`MF_ExfilPlayerDetectRadius`, default 400m) to count living friendly operators.
+* **Strict Boarding Enforcement:** The AI pilot touches down on the deck and **will NOT take off until every single living operator in the extraction zone has boarded the helicopter**.
+* **Base Return:** Once all operators are aboard, the helicopter lifts off, navigates back to base/HQ, lands, and orders disembarkation.
 
 ---
 
@@ -155,16 +215,18 @@ Every generated operation randomly assigns an authentic historical or modern tac
 
 ## ⚙️ Configuration Architecture
 
-All framework settings are organized across 6 modular native SQF configuration files located in `config\`:
+All framework settings are organized across 8 modular native SQF configuration files located in `config\`:
 
 ```text
 config/
 ├── mission_config.sqf                  # Core AO radii, player sides, base/airport exclusions & Lore Callsigns
-├── cfg_feature_toggles.sqf             # Independent true/false switches for all 21 subsystems
+├── cfg_feature_toggles.sqf             # Independent true/false switches for all subsystems
 ├── cfg_enemy_forces.sqf                # Patrol counts, squad sizes, AI sub-skills, QRF waves & civilians
 ├── cfg_object_pools.sqf                # Classname arrays for infantry, vehicles, static weapons, props & factions
 ├── cfg_ied_system.sqf                  # Roadside IED placement geometry, offsets, detection & ACE3 settings
-└── cfg_randomization_replayability.sqf # Seed modes, continuous loop delays, side mission bonuses & failure escalation
+├── cfg_randomization_replayability.sqf # Seed modes, continuous loop delays, side mission bonuses & failure escalation
+├── cfg_player_loadouts.sqf             # Predefined tactical role loadouts (LMG, Medic, LAT, DMR) & role name overrides
+└── cfg_support_systems.sqf             # Autonomous Recon Drone altitude/orbit & Purple Smoke Helicopter Exfil
 ```
 
 ---
