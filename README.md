@@ -13,15 +13,29 @@
 > **Repository Purpose:** This GitHub repository serves as the **official issue tracker, feature reference, and mod-compatibility hub** for MMF. The actual compiled mod and mission files are distributed through the **Steam Workshop**. Source files are not tracked in this repository.
 > 
 > * **Steam Workshop:** Search for `Mike's Milsim Framework (MMF)`
+> * **Launcher Preset:** Download [`Milsim_Framework.html`](Milsim_Framework.html) to import the exact official modset directly into the Arma 3 Launcher.
 > * **Issue Tracker:** [Report a Bug or Request a Feature](https://github.com/OfficialMikeJ/mmf-mikesmilsimframework-arma-III/issues)
 > * **Repository Link:** [OfficialMikeJ/mmf-mikesmilsimframework-arma-III](https://github.com/OfficialMikeJ/mmf-mikesmilsimframework-arma-III.git)
 
 ---
 
+## 🌐 Community Servers & Voice Comms
+
+Join our official tactical servers and TeamSpeak 3 for coordinated operations:
+
+* **Mike's Milsim Framework Community Server:**
+  * **Server IP:** `70.28.9.208`
+  * **Port:** `2302`
+* **TeamSpeak 3 Server:**
+  * **Server IP:** `70.28.9.208`
+
+---
+
 ## 📋 Table of Contents
+- [Community Servers & Voice Comms](#-community-servers--voice-comms)
 - [Key Features](#-key-features)
+- [Official Community Modset & Preset](#-official-community-modset--preset)
 - [Primary Mission Archetypes](#-primary-mission-archetypes)
-- [Supported Mods & Content Integration](#-supported-mods--content-integration)
 - [Tactical Inventory & Armory Systems](#-tactical-inventory--armory-systems)
   - [Mandatory Mod-Only Gear Restriction](#mandatory-mod-only-gear-restriction)
   - [ACE3 & Virtual Arsenal Crate Init](#ace3--virtual-arsenal-crate-init)
@@ -36,6 +50,7 @@
   - [Roadside IED & Route Clearance System](#roadside-ied--route-clearance-system)
   - [Persistent History & Anti-Repetition Engine](#persistent-history--anti-repetition-engine)
 - [Configuration Architecture](#-configuration-architecture)
+- [Complete Mod Reference List](#-complete-mod-reference-list)
 - [Bug Reports & Feature Requests](#-bug-reports--feature-requests)
 - [Credits & Acknowledgments](#-credits--acknowledgments)
 
@@ -55,6 +70,26 @@
 
 ---
 
+## 📦 Official Community Modset & Preset
+
+The framework includes the official community preset file [`Milsim_Framework.html`](Milsim_Framework.html) shipped directly in the repository and with every mission upload.
+
+### Quick Import Instructions:
+1. Download or locate [`Milsim_Framework.html`](Milsim_Framework.html).
+2. Drag and drop the file directly onto the **Arma 3 Launcher** window.
+3. *Alternatively:* In the Launcher, open the **MODS** tab, click **PRESET** in the top right, select **IMPORT**, and choose `Milsim_Framework.html`.
+4. The Launcher will automatically subscribe to, download, and activate all 52 required community mods.
+
+### Mod Categories Overview:
+* **Core & Mechanics:** CBA_A3, ACE3, AIO Inventory Overhaul, Dynamic Incognito, AI Avoids Prone, Realistic Ragdolls, Reduced Sway, Reactive Building Effects.
+* **Opposing & Allied Forces:** RHS AFRF, RHS USAF, RHS GREF, RHS SAF, RHS PKL, JK C-130 Variants, Simple Interactive Helicopter Startup.
+* **Precision Weapons & Sniper Systems:** 121 USASOC Sniper Rifles, SPS AI AXMC Series, MSS Core, Accuracy International, Victrix Armaments, Seekins SIC, Leupold Mark 5HD, Steiner M5/M7, Tangent Theta, US Military Sniper Optics, dzn Rifle Tripod.
+* **Modular Combat Components (MCC):** MCC Core, MCC M4A1, MCC LMT MARS-L & SPECWAR, MCC Sig SpearLT & RattlerLT, Magnified Optics, Muzzle Devices.
+* **Tactical Gear, Uniforms & Optics:** VSM All-In-One, VSM Female, PMC Uniforms Expansion, Project BJC PMC, WR_LBT6094, WR_LV119, Fawks' Enhanced NVGs, 3DMA Western Dusk.
+* **Sound Overhauls:** JSRS Soundmod 2025, EFT Weapon Sounds [RHS], EFT Sounds for 121 USASOC Rifles.
+
+---
+
 ## 🎯 Primary Mission Archetypes
 
 MMF includes 7 tactical primary mission archetypes that rotate dynamically based on the active terrain:
@@ -68,66 +103,6 @@ MMF includes 7 tactical primary mission archetypes that rotate dynamically based
 | **`RECOVER_INTEL`** | Secure Command Intelligence | Infiltrate enemy command posts to seize encrypted terminals and battle plans. |
 | **`CONVOY_INTERDICTION`** | Interdict Armored Supply Column | Ambush and destroy staged enemy command & armored supply columns before transit. |
 | **`EOD_CLEARANCE`** | Route Clearance & Sector Sweep | Sweep main approach routes, detect emplaced roadside IEDs, and perform EOD disarm or blow-in-place operations. |
-
----
-
-## 📦 Supported Mods & Content Integration
-
-MMF features an intelligent **category-aware classname validation engine** (`MF_fnc_validateClassnames`). When modded classnames are provided in configuration arrays, the framework verifies their inheritance, `scope == 2`, and configuration class. Unloaded or missing mods are safely ignored, allowing the same mission file to adapt seamlessly between vanilla and heavily modded servers.
-
-### Officially Validated & Supported Mod Ecosystems
-
-<details>
-<summary><b>1. Vanilla Arma III & Official DLCs</b> (Click to expand)</summary>
-
-* **Base Game:** NATO, CSAT, AAF, FIA, Civilians
-* **Apex Expansion:** Pacific NATO, CSAT Pacific, Syndikat, Tanoa Gendarmerie
-* **Contact DLC:** LDF (Livonian Defense Force), Spetsnaz, Russian Contact assets
-* **Creator DLCs:** Fully compatible with Western Sahara, S.O.G. Prairie Fire, CSLA Iron Curtain, and Global Mobilization by adding their unit and vehicle classnames to `config\cfg_object_pools.sqf`.
-</details>
-
-<details>
-<summary><b>2. RHS — Red Hammer Studios</b> (Click to expand)</summary>
-
-* **RHS: AFRF (Armed Forces of the Russian Federation):**
-  * Infantry: VDV, MSV, Naval Infantry, Spetsnaz GRU
-  * Ground Vehicles: BTR-70, BTR-80, BTR-82A, BMP-2, BMP-3, T-72B3, T-80, T-90A, Tigr MRAP, KamAZ transport trucks
-  * Rotary-Wing: Mi-8MT, Mi-24V/P Hind, Ka-52 Alligator
-  * Static Defenses: Kornet ATGM, Igla-S AA, DShKM, AGS-30
-* **RHS: USAF (United States Armed Forces):**
-  * Infantry: US Army (OEF-CP / UCP), USMC (MARPAT Woodland / Desert)
-  * Ground Vehicles: M1151 / M1165 HMMWV, M1220 / M1230 MaxxPro MRAP, M2A2 / M2A3 Bradley, M1A1 / M1A2 Abrams, FMTV trucks
-  * Rotary-Wing: UH-60M Blackhawk, CH-47F Chinook, AH-64D Apache, AH-1Z Viper
-  * Static Defenses: M2 .50 cal (low/high), Mk19 GMG, TOW missile launcher
-* **RHS: GREF & SAF (Greens & Serbian Armed Forces):**
-  * Insurgent, Militia, and regional national army infantry templates and technical vehicles.
-</details>
-
-<details>
-<summary><b>3. CUP — Community Upgrade Project</b> (Click to expand)</summary>
-
-* **CUP Units & Weapons:** Full compatibility with Takistani Army, Chernarussian Movement of the Red Star (ChDKZ), Takistani Militia, US Army, and Russian Federation infantry pools.
-* **CUP Vehicles:** BTR-60/90, T-55, T-72, BMP-1/2, Land Rovers, Hilux technicals, UAZ, Ural transport trucks, and armed light patrol vehicles.
-</details>
-
-<details>
-<summary><b>4. ACE3 — Advanced Combat Environment</b> (Click to expand)</summary>
-
-* **ACE Arsenal:** Clean native armory whitelist populated strictly with loaded mod weapons and equipment.
-* **EOD & Explosives Interaction Menu:** Dismounted players can inspect and disarm roadside IEDs via ACE3 radial actions.
-* **Specialist Equipment Recognition:**
-  * Detectors: `ACE_VMH3`, `ACE_VMM3`, vanilla `MineDetector`
-  * EOD Tools: `ACE_DefusalKit`, vanilla `ToolKit`
-  * Traits: `explosiveSpecialist`, `engineer`
-* **Medical Compatibility:** Unconscious state checks (`ACE_isUnconscious`) integrated into Task Force wipe failure logic.
-</details>
-
-<details>
-<summary><b>5. 3CB Factions & 3CB BAF</b> (Click to expand)</summary>
-
-* Compatible with 3CB British Armed Forces equipment and vehicles.
-* Supports 3CB Middle Eastern, Cold War, and Eastern European insurgent and governmental factions.
-</details>
 
 ---
 
@@ -228,6 +203,67 @@ config/
 ├── cfg_player_loadouts.sqf             # Predefined tactical role loadouts (LMG, Medic, LAT, DMR) & role name overrides
 └── cfg_support_systems.sqf             # Autonomous Recon Drone altitude/orbit & Purple Smoke Helicopter Exfil
 ```
+
+---
+
+## 📑 Complete Mod Reference List
+
+Below is the full inventory of all 52 community mods configured in [`Milsim_Framework.html`](Milsim_Framework.html):
+
+| # | Mod Name | Source | Steam Workshop Link |
+| :-: | :--- | :-: | :--- |
+| 1 | **121 USASOC Sniper Rifles Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3090136183) |
+| 2 | **3DMA - Western Dusk** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3030830594) |
+| 3 | **4K upscaled textures** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3281872662) |
+| 4 | **ace** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=463939057) |
+| 5 | **ACE3 Compatibility for SPS AI AXMC Sniper Rifles** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1511234414) |
+| 6 | **AI avoids prone** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2011658088) |
+| 7 | **AIO - Arma Inventory Overhaul (Beta)** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3830570288) |
+| 8 | **CBA_A3** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=450814997) |
+| 9 | **Dynamic Incognito System** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3613999293) |
+| 10 | **dzn Rifle Tripod** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1720595785) |
+| 11 | **Escape From Tarkov Sounds for 121 USASOC Rifles** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3095812091) |
+| 12 | **Escape From Tarkov Weapon Sounds [RHS]** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2006655036) |
+| 13 | **Fawks' Enhanced NVGs** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2513044572) |
+| 14 | **JK C-130 Special Variants Mega Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3053622210) |
+| 15 | **JSRS SOUNDMOD 2025** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3407948300) |
+| 16 | **Ladder Tweak Remastered** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2969350304) |
+| 17 | **MCC - Core** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3575468172) |
+| 18 | **MCC - LMT MARS-L and SPECWAR Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3618796804) |
+| 19 | **MCC - M4A1 Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3591481785) |
+| 20 | **MCC - Magnified Optics Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3596643390) |
+| 21 | **MCC - Muzzle Devices** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3576299123) |
+| 22 | **MCC - Sig SpearLT & RattlerLT Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3620610160) |
+| 23 | **MSAM - ACE Sniper Cheat Sheet** | Local (`@MSAM`) | Included locally |
+| 24 | **MSS - Accuracy International Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554879168) |
+| 25 | **MSS - Bipods** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554125508) |
+| 26 | **MSS - CORE** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554841552) |
+| 27 | **MSS - Leupold Mark 5HD Optics** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554208394) |
+| 28 | **MSS - Muzzle Devices** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554128459) |
+| 29 | **MSS - Optics (Core)** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3554182227) |
+| 30 | **MSS - Seekins SIC** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3787263933) |
+| 31 | **MSS - Steiner M5 & M7 Optics Pack** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3705139772) |
+| 32 | **MSS - Tangent Theta Professional Optics** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3701745226) |
+| 33 | **MSS - US Military Sniper Optics** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3701741534) |
+| 34 | **MSS - Victrix Armaments** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3812510991) |
+| 35 | **PMC Uniforms Expansion** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2726950683) |
+| 36 | **Project BJC - PMC Uniforms** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=2551407805) |
+| 37 | **Reactive Building Effects PLUS** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3702603652) |
+| 38 | **Realistic Ragdoll Physics** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3639557777) |
+| 39 | **Reduced Haze Mod v3.1** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1397683809) |
+| 40 | **Reduced Weapon Sway** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=567737932) |
+| 41 | **RHSAFRF** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=843425103) |
+| 42 | **RHSGREF** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=843593391) |
+| 43 | **RHSPKL** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1978754337) |
+| 44 | **RHSSAF** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=843632231) |
+| 45 | **RHSUSAF** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=843577117) |
+| 46 | **Simple Interactive Helicopter Startup (RHSUSAF)** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3225769745) |
+| 47 | **SPS AI AXMC Sniper Rifle Series** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1510335080) |
+| 48 | **VSM All-In-One Collection** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=823636749) |
+| 49 | **VSM Female \| Female Vests & Uniforms for VSM** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3832542149) |
+| 50 | **WR_LBT6094** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3694450401) |
+| 51 | **WR_LV119** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3691924526) |
+| 52 | **ZL2 Static Poses** | Steam | [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=1592858776) |
 
 ---
 
